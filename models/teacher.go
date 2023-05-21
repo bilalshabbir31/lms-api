@@ -12,8 +12,7 @@ type Teacher struct {
 	Name          string `bun:"name"`
 }
 
-func Create_teacher(db *bun.DB, id int, name string) (int, error) {
-	ctx := context.Background()
+func Create_teacher(ctx context.Context,db *bun.DB, id int, name string) (int, error) {
 	teacher := &Teacher{ID: id, Name: name}
 	_, err := db.NewInsert().Model(teacher).Exec(ctx)
 	if err != nil {
@@ -23,8 +22,7 @@ func Create_teacher(db *bun.DB, id int, name string) (int, error) {
 	return teacher.ID, err
 }
 
-func Fetch_all_teacher(db *bun.DB){
-	ctx := context.Background()
+func Fetch_all_teacher(ctx context.Context,db *bun.DB){
 	var teachers []Teacher
 	err:= db.NewSelect().Model(&teachers).Scan(ctx)
 
@@ -38,9 +36,7 @@ func Fetch_all_teacher(db *bun.DB){
 	}
 }
 
-func Get_teacher_by_id(db *bun.DB,id int) (int,error){
-
-	ctx := context.Background()
+func Get_teacher_by_id(ctx context.Context,db *bun.DB,id int) (int,error){
 
 	var teacher Teacher
 	err:= db.NewSelect().Model(&teacher).Where("id=?",id).Scan(ctx)
