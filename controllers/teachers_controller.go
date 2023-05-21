@@ -7,9 +7,11 @@ import (
 	"github.com/bilalshabbir31/bun_learning/common"
 	"github.com/bilalshabbir31/bun_learning/models"
 	"github.com/gin-gonic/gin"
+	"github.com/uptrace/bun"
 )
 
 
+var DB *bun.DB
 
 func Create(ctx *gin.Context) (int,error){
 	var teacher common.Teacher
@@ -20,6 +22,9 @@ func Create(ctx *gin.Context) (int,error){
 		})
 		return -1,err
 	}
+	println("88888888888888888888888888888888888888")
+	println(ctx)
+	println("99999999999999999999999999999999999999")
 	teacher_id,err:=models.Create_teacher(ctx,DB,teacher.ID,teacher.Name)
 	if err==nil{
 		return teacher_id,nil
