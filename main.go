@@ -20,6 +20,7 @@ func main(){
   r.Use(cors.New(ginConfig))
 
 	r.POST("/create/teacher",handlers.Create_teacher)
+	r.GET("/teachers",handlers.Show_all_teachers)
 
 
 	r.Run()

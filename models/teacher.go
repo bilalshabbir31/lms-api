@@ -3,6 +3,7 @@ package models
 import (
 	"context"
 
+	"github.com/bilalshabbir31/bun_learning/common"
 	"github.com/uptrace/bun"
 )
 
@@ -22,18 +23,14 @@ func Create_teacher(ctx context.Context,db *bun.DB, id int, name string) (int, e
 	return teacher.ID, err
 }
 
-func Fetch_all_teacher(ctx context.Context,db *bun.DB){
+func Fetch_all_teacher(ctx context.Context,db *bun.DB)  ([]common.Teacher, error) {
 	var teachers []Teacher
 	err:= db.NewSelect().Model(&teachers).Scan(ctx)
 
 	if err!=nil{
 		println(err)
 	}
-	for _, teacher := range teachers {
-		print(teacher.ID)
-		print(teacher.Name)
-		println()
-	}
+	return convert_resultset_of_teacher(teachers),nil
 }
 
 func Get_teacher_by_id(ctx context.Context,db *bun.DB,id int) (int,error){
@@ -48,4 +45,18 @@ func Get_teacher_by_id(ctx context.Context,db *bun.DB,id int) (int,error){
 	println(teacher.ID,teacher.Name)
 	return teacher.ID,err
 
+}
+
+
+func convert_resultset_of_teacher(teachers []Teacher) []common.Teacher {
+	result := make([]common.Teacher, len(teachers))
+
+	for idx, teacher := range teachers {
+		convert_teacher := common.Teacher{
+			ID: teacher.ID,
+			Name: teacher.Name,
+		}
+		result[idx] = convert_teacher
+	}
+	return result
 }
