@@ -22,13 +22,19 @@ func Create(ctx *gin.Context) (int,error){
 		})
 		return -1,err
 	}
-	println("88888888888888888888888888888888888888")
-	println(ctx)
-	println("99999999999999999999999999999999999999")
 	teacher_id,err:=models.Create_teacher(ctx,DB,teacher.ID,teacher.Name)
 	if err==nil{
 		return teacher_id,nil
 	}else{
 		return -1, fmt.Errorf("error in controller to create a teacher %v",err )
+	}
+}
+
+func Show_all(ctx *gin.Context) ([]common.Teacher, error) {
+	teachers, err := models.Fetch_all_teacher(ctx,DB)
+	if err == nil {
+		return teachers, nil
+	} else {
+		return nil, fmt.Errorf("error controller get all to dos task %v", err)
 	}
 }
