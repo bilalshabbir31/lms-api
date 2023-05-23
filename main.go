@@ -21,7 +21,7 @@ func main(){
 
 	r.POST("/create/teacher",handlers.Create_teacher)
 	r.GET("/teachers",handlers.Show_all_teachers)
-
+	r.GET("/teacher",handlers.Show)
 
 	r.Run()
 

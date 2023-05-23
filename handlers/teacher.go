@@ -28,3 +28,12 @@ func Show_all_teachers(ctx *gin.Context)  {
 	}
 	
 }
+
+func Show(ctx *gin.Context){
+	teacher, err := controllers.Show(ctx)
+	if err!=nil{
+		ctx.JSON(http.StatusInternalServerError,gin.H{"error in show handler":err.Error})
+	}else{
+		ctx.JSON(http.StatusOK,teacher)
+	}
+}

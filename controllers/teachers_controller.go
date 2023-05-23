@@ -38,3 +38,19 @@ func Show_all(ctx *gin.Context) ([]common.Teacher, error) {
 		return nil, fmt.Errorf("error controller get all to dos task %v", err)
 	}
 }
+
+func Show(ctx *gin.Context) (common.Teacher,error){
+	var teacher common.Teacher
+	err:= ctx.ShouldBind(&teacher)
+	if err!=nil{	
+		ctx.JSON(http.StatusInternalServerError,gin.H{
+			"Error":err.Error(),
+		})
+	}
+	teacher, err=models.Get_teacher_by_id(ctx,DB,teacher.ID)
+	if err==nil{
+		return teacher,nil 
+	}else{
+		return teacher, fmt.Errorf("cannot find teacher %v",err)
+	}
+}

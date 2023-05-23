@@ -33,20 +33,20 @@ func Fetch_all_teacher(ctx context.Context,db *bun.DB)  ([]common.Teacher, error
 	return convert_resultset_of_teacher(teachers),nil
 }
 
-func Get_teacher_by_id(ctx context.Context,db *bun.DB,id int) (int,error){
-
-	var teacher Teacher
-	err:= db.NewSelect().Model(&teacher).Where("id=?",id).Scan(ctx)
+func Get_teacher_by_id(ctx context.Context,db *bun.DB,id int) (common.Teacher,error){
+  teacher :=&Teacher{ID: id}
+	err:= db.NewSelect().Model(&teacher).WherePK().Scan(ctx)
 
 	if err!=nil{
 		println(err)
 	}
-
+	var teacher_res common.Teacher
+	teacher_res.ID=teacher.ID
+	teacher_res.Name=teacher.Name
 	println(teacher.ID,teacher.Name)
-	return teacher.ID,err
+	return teacher_res,err
 
 }
-
 
 func convert_resultset_of_teacher(teachers []Teacher) []common.Teacher {
 	result := make([]common.Teacher, len(teachers))
