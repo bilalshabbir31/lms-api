@@ -35,19 +35,21 @@ func Fetch_all_teacher(ctx context.Context,db *bun.DB)  ([]common.Teacher, error
 	return convert_resultset_of_teacher(teachers),nil
 }
 
-func Get_teacher_by_id(ctx context.Context,db *bun.DB,id int) (common.Teacher,error){
-  teacher :=&Teacher{ID: id}
-	err:= db.NewSelect().Model(&teacher).WherePK().Scan(ctx)
-
-	if err!=nil{
-		println(err)
+func GetTeacherByID(ctx context.Context, db *bun.DB, id int) (common.Teacher, error) {
+	teacher := &Teacher{ID: id}
+	err := db.NewSelect().Model(teacher).WherePK().Scan(ctx)
+	if err != nil {
+		return common.Teacher{}, fmt.Errorf("failed to get teacher: %w", err)
 	}
-	var teacher_res common.Teacher
-	teacher_res.ID=teacher.ID
-	teacher_res.Name=teacher.Name
-	println(teacher.ID,teacher.Name)
-	return teacher_res,err
 
+	teacherRes := common.Teacher{
+		ID:   teacher.ID,
+		Name: teacher.Name,
+	}
+
+	fmt.Println(teacher.ID, teacher.Name)
+
+	return teacherRes, nil
 }
 
 func Delete_Teacher(ctx context.Context, db *bun.DB,id int)(bool,error){
