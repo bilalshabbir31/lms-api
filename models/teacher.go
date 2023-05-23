@@ -2,6 +2,8 @@ package models
 
 import (
 	"context"
+	"errors"
+	"fmt"
 
 	"github.com/bilalshabbir31/bun_learning/common"
 	"github.com/uptrace/bun"
@@ -46,6 +48,24 @@ func Get_teacher_by_id(ctx context.Context,db *bun.DB,id int) (common.Teacher,er
 	println(teacher.ID,teacher.Name)
 	return teacher_res,err
 
+}
+
+func Delete_Teacher(ctx context.Context, db *bun.DB,id int)(bool,error){
+	teacher := &Teacher{ID: id}
+	res, err := db.NewDelete().Model(teacher).WherePK().Exec(ctx)
+	if err != nil {
+		return false, fmt.Errorf("error model delete teacher %v", err)
+	}
+	rowsAffected, err := res.RowsAffected()
+	if err != nil {
+		return false, fmt.Errorf("error getting rows affetced: %w", err)
+	}
+
+	if rowsAffected == 0 {
+		return false, errors.New("nothing update or teachet not found")
+	}
+
+	return true, nil
 }
 
 func convert_resultset_of_teacher(teachers []Teacher) []common.Teacher {

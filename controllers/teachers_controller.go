@@ -54,3 +54,20 @@ func Show(ctx *gin.Context) (common.Teacher,error){
 		return teacher, fmt.Errorf("cannot find teacher %v",err)
 	}
 }
+
+func Destroy(ctx *gin.Context) (bool,error){
+	var teacher common.Teacher
+	err := ctx.ShouldBind(&teacher)
+	if err != nil {
+		ctx.JSON(http.StatusInternalServerError, gin.H{
+			"error": err.Error(),
+		})
+		return false, err
+	}
+	_, error := models.Delete_Teacher(ctx, DB, teacher.ID)
+	if error == nil {
+		return true, nil
+	} else {
+		return false, fmt.Errorf("error controller delete teacher%v", error)
+	}
+}
