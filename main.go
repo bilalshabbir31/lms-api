@@ -21,7 +21,7 @@ func main(){
 
 	r.POST("/create/teacher",handlers.Create_teacher)
 	r.GET("/teachers",handlers.Show_all_teachers)
-	r.GET("/teacher/:id",handlers.Show)
+	r.GET("/teachers/:id",handlers.Show)
 	r.POST("/delete/teacher",handlers.Delete)
 	r.Run()
 

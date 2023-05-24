@@ -3,6 +3,7 @@ package controllers
 import (
 	"fmt"
 	"net/http"
+	"strconv"
 
 	"github.com/bilalshabbir31/bun_learning/common"
 	"github.com/bilalshabbir31/bun_learning/models"
@@ -41,17 +42,8 @@ func Show_all(ctx *gin.Context) ([]common.Teacher, error) {
 
 func Show(ctx *gin.Context) (common.Teacher, error) {
 	var teacher common.Teacher
-
-	// Bind request data to the teacher variable
-	err := ctx.ShouldBind(&teacher)
-	if err != nil {
-		ctx.JSON(http.StatusInternalServerError, gin.H{
-			"error": err.Error(),
-		})
-		return teacher, err
-	}
-	// Retrieve teacher object from the database
-	teacher, err = models.GetTeacherByID(ctx, DB, teacher.ID)
+	teacher.ID,_= strconv.Atoi(ctx.Param("id"))
+	teacher, err := models.GetTeacherByID(ctx, DB, teacher.ID)
 	if err != nil {
 		err = fmt.Errorf("cannot find teacher: %w", err)
 		return teacher, err
