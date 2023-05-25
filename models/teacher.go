@@ -2,6 +2,8 @@ package models
 
 import (
 	"context"
+	"errors"
+	"fmt"
 
 	"github.com/bilalshabbir31/bun_learning/common"
 	"github.com/uptrace/bun"
@@ -33,20 +35,40 @@ func Fetch_all_teacher(ctx context.Context,db *bun.DB)  ([]common.Teacher, error
 	return convert_resultset_of_teacher(teachers),nil
 }
 
-func Get_teacher_by_id(ctx context.Context,db *bun.DB,id int) (int,error){
-
-	var teacher Teacher
-	err:= db.NewSelect().Model(&teacher).Where("id=?",id).Scan(ctx)
-
-	if err!=nil{
-		println(err)
+func GetTeacherByID(ctx context.Context, db *bun.DB, id int) (common.Teacher, error) {
+	teacher := &Teacher{ID: id}
+	err := db.NewSelect().Model(teacher).WherePK().Scan(ctx)
+	if err != nil {
+		return common.Teacher{}, fmt.Errorf("failed to get teacher: %w", err)
 	}
 
-	println(teacher.ID,teacher.Name)
-	return teacher.ID,err
+	teacherRes := common.Teacher{
+		ID:   teacher.ID,
+		Name: teacher.Name,
+	}
 
+	fmt.Println(teacher.ID, teacher.Name)
+
+	return teacherRes, nil
 }
 
+func Delete_Teacher(ctx context.Context, db *bun.DB,id int)(bool,error){
+	teacher := &Teacher{ID: id}
+	res, err := db.NewDelete().Model(teacher).WherePK().Exec(ctx)
+	if err != nil {
+		return false, fmt.Errorf("error model delete teacher %v", err)
+	}
+	rowsAffected, err := res.RowsAffected()
+	if err != nil {
+		return false, fmt.Errorf("error getting rows affetced: %w", err)
+	}
+
+	if rowsAffected == 0 {
+		return false, errors.New("nothing update or teachet not found")
+	}
+
+	return true, nil
+}
 
 func convert_resultset_of_teacher(teachers []Teacher) []common.Teacher {
 	result := make([]common.Teacher, len(teachers))

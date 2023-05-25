@@ -3,6 +3,7 @@ package controllers
 import (
 	"fmt"
 	"net/http"
+	"strconv"
 
 	"github.com/bilalshabbir31/bun_learning/common"
 	"github.com/bilalshabbir31/bun_learning/models"
@@ -36,5 +37,35 @@ func Show_all(ctx *gin.Context) ([]common.Teacher, error) {
 		return teachers, nil
 	} else {
 		return nil, fmt.Errorf("error controller get all to dos task %v", err)
+	}
+}
+
+func Show(ctx *gin.Context) (common.Teacher, error) {
+	var teacher common.Teacher
+	teacher.ID,_= strconv.Atoi(ctx.Param("id"))
+	teacher, err := models.GetTeacherByID(ctx, DB, teacher.ID)
+	if err != nil {
+		err = fmt.Errorf("cannot find teacher: %w", err)
+		return teacher, err
+	}
+
+	return teacher, nil
+}
+
+
+func Destroy(ctx *gin.Context) (bool,error){
+	var teacher common.Teacher
+	err := ctx.ShouldBind(&teacher)
+	if err != nil {
+		ctx.JSON(http.StatusInternalServerError, gin.H{
+			"error": err.Error(),
+		})
+		return false, err
+	}
+	_, error := models.Delete_Teacher(ctx, DB, teacher.ID)
+	if error == nil {
+		return true, nil
+	} else {
+		return false, fmt.Errorf("error controller delete teacher%v", error)
 	}
 }

@@ -28,3 +28,21 @@ func Show_all_teachers(ctx *gin.Context)  {
 	}
 	
 }
+
+func Show(ctx *gin.Context) {
+	teacher, err := controllers.Show(ctx)
+	if err != nil {
+		ctx.JSON(http.StatusInternalServerError, gin.H{"error": err.Error()})
+		return
+	}
+
+	ctx.JSON(http.StatusOK, teacher)
+}
+func Delete(ctx *gin.Context){
+	teacher, err := controllers.Destroy(ctx)
+	if err==nil{
+		ctx.JSON(http.StatusOK, teacher)
+	}else{
+		ctx.JSON(http.StatusInternalServerError, gin.H{"error handler delete teacher is": err.Error})
+	}
+}
