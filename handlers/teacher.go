@@ -46,3 +46,12 @@ func Delete(ctx *gin.Context){
 		ctx.JSON(http.StatusInternalServerError, gin.H{"error handler delete teacher is": err.Error})
 	}
 }
+
+func Update(ctx *gin.Context){
+	up_teacher, err := controllers.Update_teacher(ctx)
+	if err==nil{
+		ctx.JSON(http.StatusOK,up_teacher)
+	}else{
+		ctx.JSON(http.StatusInternalServerError, gin.H{"Error in Handler" :err.Error})
+	}
+}
