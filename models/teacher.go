@@ -70,6 +70,19 @@ func Delete_Teacher(ctx context.Context, db *bun.DB,id int)(bool,error){
 	return true, nil
 }
 
+func Update_Teacher(ctx context.Context, db *bun.DB, id int, name string) (bool, error) {
+	teacher := &Teacher{ID: id, Name: name}
+	res, err := db.NewUpdate().Model(teacher).Set("name = ?",teacher.Name).Where("id = ?",teacher.ID).Exec(ctx)
+	if err!=nil{
+		return false, fmt.Errorf("Error in model update %v",err)
+	}
+	row_affected, err:=res.RowsAffected()
+	if row_affected == 0 {
+		return false, fmt.Errorf("Error")
+	}
+	return true, nil
+}
+
 func convert_resultset_of_teacher(teachers []Teacher) []common.Teacher {
 	result := make([]common.Teacher, len(teachers))
 

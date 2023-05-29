@@ -23,6 +23,7 @@ func main(){
 	r.GET("/teachers",handlers.Show_all_teachers)
 	r.GET("/teachers/:id",handlers.Show)
 	r.POST("/delete/teacher",handlers.Delete)
+	r.PATCH("/update/teacher",handlers.Update)
 	r.Run()
 
 }

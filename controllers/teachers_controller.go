@@ -69,3 +69,19 @@ func Destroy(ctx *gin.Context) (bool,error){
 		return false, fmt.Errorf("error controller delete teacher%v", error)
 	}
 }
+
+func Update_teacher(ctx *gin.Context) (bool, error){
+	var teacher common.Teacher
+	err := ctx.ShouldBind(&teacher)
+	if err!=nil{
+		ctx.JSON(http.StatusInternalServerError, gin.H{
+			"error" : err.Error(),
+		})
+	}
+	_, error := models.Update_Teacher(ctx,DB,teacher.ID,teacher.Name)
+	if error == nil{
+		return true,nil
+	}else{
+		return false,fmt.Errorf("Error in Controller")
+	}
+}
